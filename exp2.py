@@ -1,49 +1,111 @@
-from typing import Callable
-from final_project_part1 import DirectedWeightedGraph
-from min_heap import MinHeap, Element
+import matplotlib.pyplot as plot
+import timeit
+from part1 import dijkstra
+from part3 import *
 
-def a_star(G: DirectedWeightedGraph, source: any, des: any, heuristic: dict[any, float]) -> tuple[dict, list]:
-    """
-    Computes the shortest path between a source and destination node in a weighted directed graph using the A* algorithm.
-    
-    Args:
-        G (DirectedWeightedGraph): The graph to search for the shortest path.
-        source (any): The node to start the search from.
-        des (any): The destination node to search for.
-        heuristic (dict[any, float]): A dictionary that takes a node, returns the estimated distance between a node and the destination node.
-        
-    Returns:
-        A tuple of two elements:
-        1. A dictionary that maps each node to its predecessor in the shortest path from the source node to that node.
-        2. A list of the nodes in the shortest path from the source node to the destination node.
-    """
-    pred = {}
-    Q = MinHeap([])
-    Q.insert(Element(source, 0))
-    dist = {source: 0}
 
-    while not Q.is_empty():
-        current_element = Q.extract_min()
-        current_node = current_element.value
+def main():
+    stations = read_stations()
+    graph, connections = read_station_connections(stations)
 
-        for neighbour in G.adj[current_node]:
-            dis = G.w(current_node, neighbour) + dist[current_node]
-            if neighbour in dist and dist[neighbour] <= dis:
-                    continue
-            
-            dist[neighbour] = dis
-            pred[neighbour] = current_node
-            f_score = dis + heuristic[neighbour]
-            if neighbour in Q.map:
-                Q.decrease_key(neighbour, f_score)
-            else:
-                Q.insert(Element(neighbour, f_score))
+    nodes = graph.adj.keys()
+    time_d = []
+    time_a = []
+    frequency_paths = {}
+    distance = []
 
-    if (not(des in pred)):
-        return (pred, [])
-    
-    path = [des, pred[des]]
-    while path[-1] != source:
-        path.append(pred[path[-1]])
-    return (pred, list(reversed(path)))
+    time_a_same_line = []
+    time_d_same_line = []
+    distance_same_line = []
 
+    time_a_adjacent_line = []
+    time_d_adjacent_line = []
+    distance_adjacent_line = []
+
+    time_a_multiple_line_transfer = []
+    time_d_multiple_line_transfer = []
+    distance_multiple_line_transfer = []
+
+    for i in nodes:
+        for j in nodes:
+            if i != j:
+                start_time1 = timeit.default_timer()
+                d, path = calc_sp_a_star(stations, graph, i, j)
+                time_duration1 = timeit.default_timer() - start_time1
+                time_a.append(time_duration1)
+
+                start_time2 = timeit.default_timer()
+                dijkstra(graph, i)
+                time_duration2 = timeit.default_timer() - start_time2
+                time_d.append(time_duration2)
+
+                if same_lines(path, connections):
+                    time_a_same_line.append(time_duration1)
+                    time_d_same_line.append(time_duration2)
+                    distance_same_line.append(d)
+                elif adjacent_lines(path, connections):
+                    time_a_adjacent_line.append(time_duration1)
+                    time_d_adjacent_line.append(time_duration2)
+                    distance_adjacent_line.append(d)
+                elif multiple_line_transfers(path, connections):
+                    time_a_multiple_line_transfer.append(time_duration1)
+                    time_d_multiple_line_transfer.append(time_duration2)
+                    distance_multiple_line_transfer.append(d)
+
+                distance.append(d)
+
+                number_of_lines = number_of_lines_in_path(path, connections)
+                if number_of_lines != 0:
+                    frequency_paths[number_of_lines] = (
+                        frequency_paths.get(number_of_lines, 0) + 1
+                    )
+
+    plot.title(
+        f"Shortest path distance vs. run time\n(unreachable nodes are consider as distance 0)"
+    )
+    plot.xlabel("Distance")
+    plot.ylabel("Run Time")
+    plot.scatter(distance, time_d, label="Dijkstra")
+    plot.scatter(distance, time_a, label="A*")
+    plot.legend()
+    plot.show()
+
+    plot.title(f"Shortest path distance vs. run time for same line connections")
+    plot.xlabel("Distance")
+    plot.ylabel("Run Time")
+    plot.scatter(distance_same_line, time_d_same_line, label="Dijkstra")
+    plot.scatter(distance_same_line, time_a_same_line, label="A*")
+    plot.legend()
+    plot.show()
+
+    plot.title(f"Shortest path distance vs. run time for adjacent line connections")
+    plot.xlabel("Distance")
+    plot.ylabel("Run Time")
+    plot.scatter(distance_adjacent_line, time_d_adjacent_line, label="Dijkstra")
+    plot.scatter(distance_adjacent_line, time_a_adjacent_line, label="A*")
+    plot.legend()
+    plot.show()
+
+    plot.title(f"Shortest path distance vs. run time for multiple line transfers")
+    plot.xlabel("Distance")
+    plot.ylabel("Run Time")
+    plot.scatter(
+        distance_multiple_line_transfer, time_d_multiple_line_transfer, label="Dijkstra"
+    )
+    plot.scatter(
+        distance_multiple_line_transfer, time_a_multiple_line_transfer, label="A*"
+    )
+    plot.legend()
+    plot.show()
+
+    plot.title(
+        f"Number of lines in shortest path vs. frequency\n (Not including unreachable nodes)"
+    )
+    plot.xlabel("Number of lines")
+    plot.ylabel("Frequency")
+    plot.bar(frequency_paths.keys(), frequency_paths.values())
+    plot.show()
+
+
+if __name__ == "__main__":
+    main()
