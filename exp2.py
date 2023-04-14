@@ -2,15 +2,15 @@ from typing import Callable
 from final_project_part1 import DirectedWeightedGraph
 from min_heap import MinHeap, Element
 
-def a_star(G: DirectedWeightedGraph, source: int, des: int, heuristic: Callable[[int], float]) -> tuple[dict, list]:
+def a_star(G: DirectedWeightedGraph, source: any, des: any, heuristic: dict[any, float]) -> tuple[dict, list]:
     """
     Computes the shortest path between a source and destination node in a weighted directed graph using the A* algorithm.
     
     Args:
         G (DirectedWeightedGraph): The graph to search for the shortest path.
-        source (int): The node to start the search from.
-        des (int): The destination node to search for.
-        heuristic (Callable[[int], float]): A function that estimates the distance between a node and the destination node.
+        source (any): The node to start the search from.
+        des (any): The destination node to search for.
+        heuristic (dict[any, float]): A dictionary that takes a node, returns the estimated distance between a node and the destination node.
         
     Returns:
         A tuple of two elements:
@@ -20,8 +20,6 @@ def a_star(G: DirectedWeightedGraph, source: int, des: int, heuristic: Callable[
     pred = {}
     Q = MinHeap([])
     Q.insert(Element(source, 0))
-    nodes = list(G.adj.keys())
-    hmap = {node: heuristic(node) for node in nodes}
     dist = {source: 0}
 
     while not Q.is_empty():
@@ -35,7 +33,7 @@ def a_star(G: DirectedWeightedGraph, source: int, des: int, heuristic: Callable[
             
             dist[neighbour] = dis
             pred[neighbour] = current_node
-            f_score = dis + hmap[neighbour]
+            f_score = dis + heuristic[neighbour]
             if neighbour in Q.map:
                 Q.decrease_key(neighbour, f_score)
             else:
