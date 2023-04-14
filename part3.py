@@ -17,6 +17,7 @@ station1, station2
 stations_file = "./csv_files/london_stations.csv"
 station_connections_file = "./csv_files/london_connections.csv"
 
+
 def distance(station1, station2):
     """
     Calculates the distance between two stations.
@@ -37,11 +38,16 @@ def read_stations():
     return stations
 
 
-def read_station_connections(stations, graph):
+stations = read_stations()
+
+
+def read_station_connections():
+    graph = DirectedWeightedGraph()
+    connections: dict[(int, int):int] = {}
     with open(station_connections_file, "r", newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
         next(reader)  # skip header
-        for station1, station2, *_ in reader:
+        for station1, station2, line, *_ in reader:
             station1 = int(station1)
             station2 = int(station2)
             weight = distance(stations[station1], stations[station2])
