@@ -171,9 +171,7 @@ def main():
     plot.legend()
     plot.show()
 
-    plot.title(
-        f"Shortest path distance vs. run time for same line connections\n(unreachable nodes are consider as distance 0)"
-    )
+    plot.title(f"Shortest path distance vs. run time for same line connections")
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
     plot.scatter(distance_same_line, time_d_same_line, label="Dijkstra")
@@ -181,9 +179,7 @@ def main():
     plot.legend()
     plot.show()
 
-    plot.title(
-        f"Shortest path distance vs. run time for adjacent line connections\n(unreachable nodes are consider as distance 0)"
-    )
+    plot.title(f"Shortest path distance vs. run time for adjacent line connections")
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
     plot.scatter(distance_adjacent_line, time_d_adjacent_line, label="Dijkstra")
@@ -191,9 +187,7 @@ def main():
     plot.legend()
     plot.show()
 
-    plot.title(
-        f"Shortest path distance vs. run time for multiple line transfers\n(unreachable nodes are consider as distance 0)"
-    )
+    plot.title(f"Shortest path distance vs. run time for multiple line transfers")
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
     plot.scatter(
