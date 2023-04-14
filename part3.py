@@ -44,7 +44,9 @@ def read_station_connections(
             if station2 not in graph.adj:
                 graph.add_node(station2)
 
+            # assume stations are bidirectional
             graph.add_edge(station1, station2, weight)
+            graph.add_edge(station2, station1, weight)
             connections[(station1, station2)] = int(line)
     return graph, connections
 
