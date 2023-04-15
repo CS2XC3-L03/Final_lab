@@ -86,10 +86,10 @@ def mystery_expt(max_node_num):
         total_time = 0
 
         for _ in range(TRIAL_NUM):
-            G = final_project_part1.create_random_complete_graph(node_num, 1, 1000)
+            G = part1.create_random_complete_graph(node_num, 1, 1000)
 
             start_time = timeit.default_timer()
-            final_project_part1.mystery(G)
+            part1.mystery(G)
             time_duration = timeit.default_timer() - start_time
 
             total_time += time_duration
