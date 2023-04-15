@@ -103,5 +103,12 @@ def mystery_expt(max_node_num):
     plot.ylabel("log(Run time)")
     plot.loglog(node_num_list, avg_times)
     plot.show()
+    
+    plot.title("Graph Size vs Runtime of Mystery Algorithm")
+    plot.xlabel("Graph Size")
+    plot.ylabel("Run time")
+    plot.plot(node_num_list, avg_times)
+    plot.show()
+
 
 mystery_expt(50)
