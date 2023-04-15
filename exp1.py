@@ -74,3 +74,34 @@ expt1_graph(data, 15, "Bellman-Ford")
 
 data = expt1_data(part1.bellman_ford, approx.bellman_ford_approx, 20)
 expt1_graph(data, 20, "Bellman-Ford")
+
+
+
+def mystery_expt(max_node_num):
+    TRIAL_NUM = 20
+    avg_times = []
+    node_num_list = []
+
+    for node_num in range(1, max_node_num + 1):
+        total_time = 0
+
+        for _ in range(TRIAL_NUM):
+            G = final_project_part1.create_random_complete_graph(node_num, 1, 1000)
+
+            start_time = timeit.default_timer()
+            final_project_part1.mystery(G)
+            time_duration = timeit.default_timer() - start_time
+
+            total_time += time_duration
+
+        avg_times.append(total_time / TRIAL_NUM)
+        node_num_list.append(node_num)
+
+
+    plot.title("Graph Size vs Runtime of Mystery Algorithm")
+    plot.xlabel("log(Graph Size)")
+    plot.ylabel("log(Run time)")
+    plot.loglog(node_num_list, avg_times)
+    plot.show()
+
+mystery_expt(50)
