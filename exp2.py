@@ -47,7 +47,7 @@ def main():
                     time_a_adjacent_line.append(time_duration1)
                     time_d_adjacent_line.append(time_duration2)
                     distance_adjacent_line.append(d)
-                elif multiple_line_transfers(path, connections):
+                elif len(path) > 2:
                     time_a_multiple_line_transfer.append(time_duration1)
                     time_d_multiple_line_transfer.append(time_duration2)
                     distance_multiple_line_transfer.append(d)

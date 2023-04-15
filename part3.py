@@ -47,7 +47,9 @@ def read_station_connections(
             # assume stations are bidirectional
             graph.add_edge(station1, station2, weight)
             graph.add_edge(station2, station1, weight)
-            connections[(station1, station2)] = int(line)
+            connections[(station1, station2)] = connections[(station2, station1)] = int(
+                line
+            )
     return graph, connections
 
 
@@ -96,14 +98,6 @@ def adjacent_lines(path: list[int], connections: dict[(int, int):int]) -> bool:
             return False
 
     return True
-
-
-def multiple_line_transfers(path: list[int], connections: dict[(int, int):int]) -> bool:
-    return (
-        len(path) > 2
-        and not same_lines(path, connections)
-        and not adjacent_lines(path, connections)
-    )
 
 
 def number_of_lines_in_path(path: list[int], connections: dict[(int, int):int]) -> int:
