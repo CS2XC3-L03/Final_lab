@@ -94,7 +94,7 @@ class Bellman_Ford(SPAlgorithm):
             {}
         )  # Predecessor dictionary. Isn't returned, but here for your understanding
         dist = {}  # Distance dictionary
-        nodes = list(graph.adj.keys())
+        nodes = graph.get_nodes()
 
         # Initialize distances
         for node in nodes:
@@ -104,7 +104,7 @@ class Bellman_Ford(SPAlgorithm):
         # Meat of the algorithm
         for _ in range(graph.get_num_of_nodes()):
             for node in nodes:
-                for neighbour in graph.adj[node]:
+                for neighbour in graph.get_adj_nodes(node):
                     if dist[neighbour] > dist[node] + graph.w(node, neighbour):
                         dist[neighbour] = dist[node] + graph.w(node, neighbour)
                         pred[neighbour] = node
@@ -175,3 +175,20 @@ class A_Star(SPAlgorithm):
                     Q.insert(Element(neighbour, f_score))
 
         return dist[dest]
+
+
+def main():
+    graph = WeightedGraph()
+    for i in range(6):
+        graph.add_node(i)
+    for i,j in [(0,1),(0,2),(1,3),(1,4),(2,4),(3,5),(4,5)]:
+        graph.add_edge(i,j,1)
+    
+    pathFinder = ShortPathFinder(graph, Dijkstra)
+
+    print(pathFinder.calc_short_path(0,5))
+
+if __name__ == "__main__":
+    main()
+
+
