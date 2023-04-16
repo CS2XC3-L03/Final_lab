@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from min_heap import *
-from typing import Optional
+from typing import Callable
 
 
 class Graph(ABC):
@@ -32,7 +32,7 @@ class Graph(ABC):
 class SPAlgorithm(ABC):
     @staticmethod
     @abstractmethod
-    def calc_sp(graph: Graph, source: int, dest: Optional[int] = None) -> float:
+    def calc_sp(graph: Graph, source: int, dest: int) -> float:
         pass
 
 
@@ -147,15 +147,26 @@ class Dijkstra(SPAlgorithm):
         return dist[dest]
 
 
+class A_Star_Adapter(SPAlgorithm):
+    @staticmethod
+    def calc_sp(
+        graph: Graph, source: int, dest: int, _heuristic: Callable[[int], float]
+    ) -> float:
+        heuristic = {}
+        for node1 in graph.adj:
+            heuristic[node1] = _heuristic(node1)
+        return A_Star.calc_sp(graph, source, dest, heuristic)
+
+
 class A_Star(SPAlgorithm):
     @staticmethod
     def calc_sp(
         graph: Graph, source: int, dest: int, heuristic: dict[int, float]
     ) -> float:
         pred = {}
+        dist = {source: 0}
         Q = MinHeap([])
         Q.insert(Element(source, 0))
-        dist = {source: 0}
 
         while not Q.is_empty():
             current_element = Q.extract_min()
@@ -181,14 +192,16 @@ def main():
     graph = WeightedGraph()
     for i in range(6):
         graph.add_node(i)
-    for i,j in [(0,1),(0,2),(1,3),(1,4),(2,4),(3,5),(4,5)]:
-        graph.add_edge(i,j,1)
-    
+    for i, j in [(0, 1), (0, 2), (1, 3), (1, 4), (2, 4), (3, 5), (4, 5)]:
+        graph.add_edge(i, j, 1)
+
     pathFinder = ShortPathFinder(graph, Dijkstra)
 
-    print(pathFinder.calc_short_path(0,5))
+    print(pathFinder.calc_short_path(0, 5))
+
+    pathFinder.set_algorithm(Bellman_Ford)
+    print(pathFinder.calc_short_path(0, 5))
+
 
 if __name__ == "__main__":
     main()
-
-
