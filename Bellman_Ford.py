@@ -3,6 +3,7 @@ from min_heap import *
 
 
 class Bellman_Ford(SPAlgorithm):
+    @staticmethod
     def calc_sp(graph: Graph, source: int, dest: int) -> float:
         pred = {}  # Predecessor dictionary. Isn't returned, but here for your understanding
         dist = {}  # Distance dictionary
