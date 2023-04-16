@@ -3,11 +3,12 @@ from min_heap import *
 
 
 class Dijkstra(SPAlgorithm):
-    def calc_sp(graph: Graph, source: int) -> float:
+    @staticmethod
+    def calc_sp(graph: Graph, source: int, dest: int) -> float:
         pred = {} # Predecessor dictionary. Isn't returned, but here for your understanding
         dist = {} # Distance dictionary
         Q = MinHeap([])
-        nodes = Graph.get_nodes()
+        nodes = graph.get_nodes()
 
         # Initialize priority queue/heap and distances
         for node in nodes:
@@ -20,16 +21,16 @@ class Dijkstra(SPAlgorithm):
             current_element = Q.extract_min()
             current_node = current_element.value
             dist[current_node] = current_element.key
-            for neighbour in Graph.get_adj_nodes(current_node):
+            for neighbour in graph.get_adj_nodes(current_node):
                 if (
-                    dist[current_node] + Graph.w(current_node, neighbour)
+                    dist[current_node] + graph.w(current_node, neighbour)
                     < dist[neighbour]
                 ):
                     Q.decrease_key(
-                        neighbour, dist[current_node] + Graph.w(current_node, neighbour)
+                        neighbour, dist[current_node] + graph.w(current_node, neighbour)
                     )
-                    dist[neighbour] = dist[current_node] + Graph.w(
+                    dist[neighbour] = dist[current_node] + graph.w(
                         current_node, neighbour
                     )
                     pred[neighbour] = current_node
-        return dist
+        return dist[dest]
