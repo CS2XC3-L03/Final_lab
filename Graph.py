@@ -3,6 +3,10 @@ from abc import ABC, abstractmethod
 
 class Graph(ABC):
     @abstractmethod
+    def get_nodes() -> list[int]:
+        pass
+
+    @abstractmethod
     def get_adj_nodes(node: int) -> list[int]:
         pass
 
@@ -21,7 +25,3 @@ class Graph(ABC):
     @abstractmethod
     def w(node1: int, node2: int) -> float:
         pass
-
-
-
-

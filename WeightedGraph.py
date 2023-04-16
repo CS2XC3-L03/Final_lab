@@ -3,8 +3,11 @@ from Graph import *
 
 class WeightedGraph(Graph):
     def __init__(self):
-        self.__adj = {}
+        self.__adj: dict[int, list[int]] = {}
         self.__weights = {}
+
+    def get_nodes(self) -> list[int]:
+        return list(self.__adj.keys())
 
     def get_adj_nodes(self, node: int) -> list[int]:
         return self.__adj[node]
