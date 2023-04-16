@@ -4,10 +4,8 @@ from min_heap import *
 
 class Dijkstra(SPAlgorithm):
     def calc_sp(graph: Graph, source: int) -> float:
-        pred = (
-            {}
-        )  # Predecessor dictionary. Isn't returned, but here for your understanding
-        dist = {}  # Distance dictionary
+        pred = {} # Predecessor dictionary. Isn't returned, but here for your understanding
+        dist = {} # Distance dictionary
         Q = MinHeap([])
         nodes = Graph.get_nodes()
 
