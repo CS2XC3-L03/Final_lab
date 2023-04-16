@@ -1,14 +1,12 @@
 from SPAlgorithm import *
-from Graph import *
 from min_heap import *
 
 
-class Bellman_Ford(SPAlgorithm):
-    @staticmethod
+class Dijkstra(SPAlgorithm):
     def calc_sp(graph: Graph, source: int, dest: int) -> float:
         pred = {}  # Predecessor dictionary. Isn't returned, but here for your understanding
         dist = {}  # Distance dictionary
-        nodes = graph.get_nodes()
+        nodes = list(graph.adj.keys())
 
         # Initialize distances
         for node in nodes:
@@ -16,9 +14,9 @@ class Bellman_Ford(SPAlgorithm):
         dist[source] = 0
 
         # Meat of the algorithm
-        for _ in range(graph.number_of_nodes()):
+        for _ in range(graph.get_num_of_nodes()):
             for node in nodes:
-                for neighbour in graph.get_adj_nodes(node):
+                for neighbour in graph.adj[node]:
                     if dist[neighbour] > dist[node] + graph.w(node, neighbour):
                         dist[neighbour] = dist[node] + graph.w(node, neighbour)
                         pred[neighbour] = node
