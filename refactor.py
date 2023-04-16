@@ -150,7 +150,7 @@ class Dijkstra(SPAlgorithm):
 class A_Star(SPAlgorithm):
     @staticmethod
     def calc_sp(
-        graph: Graph, source: int, dest: int, heuristic: dict[int:float]
+        graph: Graph, source: int, dest: int, heuristic: dict[int, float]
     ) -> float:
         pred = {}
         Q = MinHeap([])
