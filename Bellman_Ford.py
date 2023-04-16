@@ -2,7 +2,7 @@ from SPAlgorithm import *
 from min_heap import *
 
 
-class Dijkstra(SPAlgorithm):
+class Bellman_Ford(SPAlgorithm):
     def calc_sp(graph: Graph, source: int, dest: int) -> float:
         pred = {}  # Predecessor dictionary. Isn't returned, but here for your understanding
         dist = {}  # Distance dictionary
