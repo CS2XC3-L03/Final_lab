@@ -16,7 +16,7 @@ def distance(station1, station2):
     return ((lat1 - lat2) ** 2 + (long1 - long2) ** 2) ** 0.5
 
 
-def read_stations() -> dict[int:(float, float)]:  # id: (lat, long)
+def read_stations() -> dict[int, tuple[float, float]]:  # id: (lat, long)
     stations = {}
     with open(stations_file, "r", newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
@@ -27,10 +27,10 @@ def read_stations() -> dict[int:(float, float)]:  # id: (lat, long)
 
 
 def read_station_connections(
-    stations: dict[int:(float, float)]
-) -> tuple[DirectedWeightedGraph, dict[(int, int):int]]:  # (graph, connections)
+    stations: dict[int, tuple[float, float]]
+) -> tuple[DirectedWeightedGraph, dict[tuple[int, int], int]]:  # (graph, connections)
     graph = DirectedWeightedGraph()
-    connections: dict[(int, int):int] = {}
+    connections: dict[tuple[int, int], int] = {}
     with open(station_connections_file, "r", newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
         next(reader)  # skip header
@@ -54,7 +54,7 @@ def read_station_connections(
 
 
 def calc_sp_a_star(
-    stations: dict[int:(float, float)],
+    stations: dict[int, tuple[float, float]],
     graph: DirectedWeightedGraph,
     source: int,
     dest: int,
@@ -70,7 +70,7 @@ def calc_sp_a_star(
     return dist, path
 
 
-def same_lines(path: list[int], connections: dict[(int, int):int]) -> bool:
+def same_lines(path: list[int], connections: dict[tuple[int, int], int]) -> bool:
     if not path:
         return False
     if len(path) == 2:
@@ -84,7 +84,7 @@ def same_lines(path: list[int], connections: dict[(int, int):int]) -> bool:
     return True
 
 
-def adjacent_lines(path: list[int], connections: dict[(int, int):int]) -> bool:
+def adjacent_lines(path: list[int], connections: dict[tuple[int, int], int]) -> bool:
     if not path or len(path) == 2 or same_lines(path, connections):
         return False
     for i in range(len(path) - 2):
@@ -100,7 +100,9 @@ def adjacent_lines(path: list[int], connections: dict[(int, int):int]) -> bool:
     return True
 
 
-def number_of_lines_in_path(path: list[int], connections: dict[(int, int):int]) -> int:
+def number_of_lines_in_path(
+    path: list[int], connections: dict[tuple[int, int], int]
+) -> int:
     lines = set()
     for i in range(len(path) - 1):
         lines.add(connections[(path[i], path[i + 1])])

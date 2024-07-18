@@ -1,10 +1,8 @@
 from part1 import DirectedWeightedGraph
-from min_heap import *
+from min_heap import Element, MinHeap
 
 
-def a_star(
-    G: DirectedWeightedGraph, source: any, des: any, heuristic: dict[any, float]
-) -> tuple[dict, list]:
+def a_star(graph: DirectedWeightedGraph, source, des, heuristic) -> tuple[dict, list]:
     """
     Computes the shortest path between a source and destination node in a weighted directed graph using the A* algorithm.
 
@@ -20,26 +18,26 @@ def a_star(
         2. A list of the nodes in the shortest path from the source node to the destination node.
     """
     pred = {}
-    Q = MinHeap([])
-    Q.insert(Element(source, 0))
-    dist = {source: 0}
+    min_heap = MinHeap([])
+    min_heap.insert(Element(source, 0))
+    dist: dict[int, float] = {source: 0}
 
-    while not Q.is_empty():
-        current_element = Q.extract_min()
+    while not min_heap.is_empty():
+        current_element = min_heap.extract_min()
         current_node = current_element.value
 
-        for neighbour in G.adj[current_node]:
-            dis = G.w(current_node, neighbour) + dist[current_node]
+        for neighbour in graph.adj[current_node]:
+            dis = graph.w(current_node, neighbour) + dist[current_node]
             if neighbour in dist and dist[neighbour] <= dis:
                 continue
 
             dist[neighbour] = dis
             pred[neighbour] = current_node
             f_score = dis + heuristic[neighbour]
-            if neighbour in Q.map:
-                Q.decrease_key(neighbour, f_score)
+            if neighbour in min_heap.map:
+                min_heap.decrease_key(neighbour, f_score)
             else:
-                Q.insert(Element(neighbour, f_score))
+                min_heap.insert(Element(neighbour, f_score))
 
     if not (des in pred):
         return (pred, [])

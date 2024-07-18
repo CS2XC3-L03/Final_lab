@@ -1,23 +1,25 @@
 from abc import ABC, abstractmethod
-from min_heap import *
 from typing import Callable
+from min_heap import Element, MinHeap
 
 
 class Graph(ABC):
+    adj: dict[int, list[int]]
+
     @abstractmethod
     def get_nodes() -> list[int]:
         pass
 
     @abstractmethod
-    def get_adj_nodes(node: int) -> list[int]:
+    def get_adj_nodes(self, node: int) -> list[int]:
         pass
 
     @abstractmethod
-    def add_node(node: int):
+    def add_node(self, node: int):
         pass
 
     @abstractmethod
-    def add_edge(start: int, end: int, w: float):
+    def add_edge(self, start: int, end: int, w: float):
         pass
 
     @abstractmethod
@@ -25,7 +27,7 @@ class Graph(ABC):
         pass
 
     @abstractmethod
-    def w(node1: int, node2: int) -> float:
+    def w(self, node1: int, node2: int) -> float:
         pass
 
 
@@ -54,7 +56,7 @@ class ShortPathFinder:
 class WeightedGraph(Graph):
     def __init__(self):
         self.__adj: dict[int, list[int]] = {}
-        self.__weights = {}
+        self.__weights: dict[tuple[int, int], float] = {}
 
     def get_nodes(self) -> list[int]:
         return list(self.__adj.keys())
@@ -73,9 +75,10 @@ class WeightedGraph(Graph):
     def get_num_of_nodes(self) -> int:
         return len(self.__adj)
 
-    def w(self, node1: int, node2: int) -> float:
+    def w(self, node1: int, node2: int):
         if node2 in self.__adj[node1]:
             return self.__weights[(node1, node2)]
+        return float("inf")
 
 
 class HeuristicGraph(WeightedGraph):
@@ -87,9 +90,9 @@ class HeuristicGraph(WeightedGraph):
         return self.__heuristic
 
 
-class Bellman_Ford(SPAlgorithm):
+class BellmanFord(SPAlgorithm):
     @staticmethod
-    def calc_sp(graph: Graph, source: int, dest: int) -> float:
+    def calc_sp(graph: WeightedGraph, source: int, dest: int) -> float:
         pred = (
             {}
         )  # Predecessor dictionary. Isn't returned, but here for your understanding
@@ -113,23 +116,23 @@ class Bellman_Ford(SPAlgorithm):
 
 class Dijkstra(SPAlgorithm):
     @staticmethod
-    def calc_sp(graph: Graph, source: int, dest: int) -> float:
+    def calc_sp(graph: WeightedGraph, source: int, dest: int) -> float:
         pred = (
             {}
         )  # Predecessor dictionary. Isn't returned, but here for your understanding
         dist = {}  # Distance dictionary
-        Q = MinHeap([])
+        min_heap = MinHeap([])
         nodes = graph.get_nodes()
 
         # Initialize priority queue/heap and distances
         for node in nodes:
-            Q.insert(Element(node, float("inf")))
+            min_heap.insert(Element(node, float("inf")))
             dist[node] = float("inf")
-        Q.decrease_key(source, 0)
+        min_heap.decrease_key(source, 0)
 
         # Meat of the algorithm
-        while not Q.is_empty():
-            current_element = Q.extract_min()
+        while not min_heap.is_empty():
+            current_element = min_heap.extract_min()
             current_node = current_element.value
             dist[current_node] = current_element.key
             for neighbour in graph.get_adj_nodes(current_node):
@@ -137,7 +140,7 @@ class Dijkstra(SPAlgorithm):
                     dist[current_node] + graph.w(current_node, neighbour)
                     < dist[neighbour]
                 ):
-                    Q.decrease_key(
+                    min_heap.decrease_key(
                         neighbour, dist[current_node] + graph.w(current_node, neighbour)
                     )
                     dist[neighbour] = dist[current_node] + graph.w(
@@ -147,29 +150,29 @@ class Dijkstra(SPAlgorithm):
         return dist[dest]
 
 
-class A_Star_Adapter(SPAlgorithm):
+class AStarAdapter(SPAlgorithm):
     @staticmethod
     def calc_sp(
-        graph: Graph, source: int, dest: int, _heuristic: Callable[[int], float]
+        graph: WeightedGraph, source: int, dest: int, _heuristic: Callable[[int], float]
     ) -> float:
         heuristic = {}
         for node1 in graph.adj:
             heuristic[node1] = _heuristic(node1)
-        return A_Star.calc_sp(graph, source, dest, heuristic)
+        return AStar.calc_sp(graph, source, dest, heuristic)
 
 
-class A_Star(SPAlgorithm):
+class AStar(SPAlgorithm):
     @staticmethod
     def calc_sp(
-        graph: Graph, source: int, dest: int, heuristic: dict[int, float]
+        graph: WeightedGraph, source: int, dest: int, heuristic: dict[int, float]
     ) -> float:
         pred = {}
-        dist = {source: 0}
-        Q = MinHeap([])
-        Q.insert(Element(source, 0))
+        dist: dict[int, float] = {source: 0}
+        min_heap = MinHeap([])
+        min_heap.insert(Element(source, 0))
 
-        while not Q.is_empty():
-            current_element = Q.extract_min()
+        while not min_heap.is_empty():
+            current_element = min_heap.extract_min()
             current_node = current_element.value
 
             for neighbour in graph.get_adj_nodes(current_node):
@@ -180,10 +183,10 @@ class A_Star(SPAlgorithm):
                 dist[neighbour] = dis
                 pred[neighbour] = current_node
                 f_score = dis + heuristic[neighbour]
-                if neighbour in Q.map:
-                    Q.decrease_key(neighbour, f_score)
+                if neighbour in min_heap.map:
+                    min_heap.decrease_key(neighbour, f_score)
                 else:
-                    Q.insert(Element(neighbour, f_score))
+                    min_heap.insert(Element(neighbour, f_score))
 
         return dist[dest]
 
@@ -195,11 +198,11 @@ def main():
     for i, j in [(0, 1), (0, 2), (1, 3), (1, 4), (2, 4), (3, 5), (4, 5)]:
         graph.add_edge(i, j, 1)
 
-    pathFinder = ShortPathFinder(graph, Dijkstra)
+    pathFinder = ShortPathFinder(graph, Dijkstra())
 
     print(pathFinder.calc_short_path(0, 5))
 
-    pathFinder.set_algorithm(Bellman_Ford)
+    pathFinder.set_algorithm(BellmanFord())
     print(pathFinder.calc_short_path(0, 5))
 
 

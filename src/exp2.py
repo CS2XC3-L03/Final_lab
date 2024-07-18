@@ -11,7 +11,7 @@ def main():
     nodes = graph.adj.keys()
     time_d = []
     time_a = []
-    frequency_paths = {}
+    frequency_paths: dict[int, int] = {}
     distance = []
 
     time_a_same_line = []
@@ -61,7 +61,7 @@ def main():
                     )
 
     plot.title(
-        f"Shortest path distance vs. run time\n(unreachable nodes are consider as distance 0)"
+        "Shortest path distance vs. run time\n(unreachable nodes are consider as distance 0)"
     )
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
@@ -70,7 +70,7 @@ def main():
     plot.legend()
     plot.show()
 
-    plot.title(f"Shortest path distance vs. run time for same line connections")
+    plot.title("Shortest path distance vs. run time for same line connections")
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
     plot.scatter(distance_same_line, time_d_same_line, label="Dijkstra")
@@ -78,7 +78,7 @@ def main():
     plot.legend()
     plot.show()
 
-    plot.title(f"Shortest path distance vs. run time for adjacent line connections")
+    plot.title("Shortest path distance vs. run time for adjacent line connections")
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
     plot.scatter(distance_adjacent_line, time_d_adjacent_line, label="Dijkstra")
@@ -86,7 +86,7 @@ def main():
     plot.legend()
     plot.show()
 
-    plot.title(f"Shortest path distance vs. run time for multiple line transfers")
+    plot.title("Shortest path distance vs. run time for multiple line transfers")
     plot.xlabel("Distance")
     plot.ylabel("Run Time")
     plot.scatter(
@@ -99,11 +99,11 @@ def main():
     plot.show()
 
     plot.title(
-        f"Number of lines in shortest path vs. frequency\n (Not including unreachable nodes)"
+        "Number of lines in shortest path vs. frequency\n (Not including unreachable nodes)"
     )
     plot.xlabel("Number of lines")
     plot.ylabel("Frequency")
-    plot.bar(frequency_paths.keys(), frequency_paths.values())
+    plot.bar([*frequency_paths.keys()], [*frequency_paths.values()])
     plot.show()
 
 
