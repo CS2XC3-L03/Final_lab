@@ -73,8 +73,6 @@ def calc_sp_a_star(
 def same_lines(path: list[int], connections: dict[tuple[int, int], int]) -> bool:
     if not path:
         return False
-    if len(path) == 2:
-        return True
     for i in range(len(path) - 2):
         if (
             connections[(path[i], path[i + 1])]
@@ -96,7 +94,6 @@ def adjacent_lines(path: list[int], connections: dict[tuple[int, int], int]) -> 
             != 1
         ):
             return False
-
     return True
 
 
