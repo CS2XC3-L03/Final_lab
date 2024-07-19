@@ -2,7 +2,7 @@ from part1 import DirectedWeightedGraph
 from min_heap import Element, MinHeap
 
 
-def a_star(graph: DirectedWeightedGraph, source, des, heuristic) -> tuple[dict, list]:
+def a_star(graph: DirectedWeightedGraph, source, dest, heuristic) -> tuple[dict, list]:
     """
     Computes the shortest path between a source and destination node in a weighted directed graph using the A* algorithm.
 
@@ -39,10 +39,10 @@ def a_star(graph: DirectedWeightedGraph, source, des, heuristic) -> tuple[dict, 
             else:
                 min_heap.insert(Element(neighbour, f_score))
 
-    if not (des in pred):
+    if dest not in pred:
         return (pred, [])
 
-    path = [des, pred[des]]
+    path = [dest, pred[dest]]
     while path[-1] != source:
         path.append(pred[path[-1]])
     return (pred, list(reversed(path)))
