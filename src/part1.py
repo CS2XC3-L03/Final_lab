@@ -142,7 +142,7 @@ def mystery(graph):
 
 def init_d(graph):
     nodes = graph.number_of_nodes()
-    d = [[float("inf") for j in range(nodes)] for i in range(nodes)]
+    d = [[float("inf") for _ in range(nodes)] for _ in range(nodes)]
     for i in range(nodes):
         for j in range(nodes):
             if graph.are_connected(i, j):
