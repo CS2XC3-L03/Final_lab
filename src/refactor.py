@@ -7,7 +7,7 @@ class Graph(ABC):
     adj: dict[int, list[int]]
 
     @abstractmethod
-    def get_nodes() -> list[int]:
+    def get_nodes(self) -> list[int]:
         pass
 
     @abstractmethod
@@ -23,7 +23,7 @@ class Graph(ABC):
         pass
 
     @abstractmethod
-    def get_num_of_nodes() -> int:
+    def get_num_of_nodes(self) -> int:
         pass
 
     @abstractmethod
