@@ -1,7 +1,14 @@
 import matplotlib.pyplot as plot
 import timeit
 from part1 import dijkstra
-from part3 import *
+from part3 import (
+    read_stations,
+    read_station_connections,
+    calc_sp_a_star,
+    same_lines,
+    adjacent_lines,
+    number_of_lines_in_path,
+)
 
 
 def main():
