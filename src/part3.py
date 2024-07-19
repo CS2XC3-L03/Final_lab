@@ -2,8 +2,8 @@ import csv
 from part1 import DirectedWeightedGraph
 from part2 import a_star
 
-stations_file = "./csv_files/london_stations.csv"
-station_connections_file = "./csv_files/london_connections.csv"
+stations_file = "../csv_files/london_stations.csv"
+station_connections_file = "../csv_files/london_connections.csv"
 
 
 def distance(station1, station2):
